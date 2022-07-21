@@ -25,10 +25,14 @@ class Game
   end
 
   def place_symbol(symbol, tile)
-    if (@tiles[tile].is_a? Integer) && tile >= 1 && tile <= 9
-      @tiles[tile] = symbol
-    else
-      puts "Sorry, invalid input."
+    loop do
+      if (tile.is_a? Integer) && tile >= 1 && tile <= 9 && (@tiles[tile].is_a? Integer)
+        @tiles[tile] = symbol
+        break
+      else
+        puts "Sorry, invalid input, please try again"
+        tile = gets.to_i
+      end
     end
   end
 
@@ -44,12 +48,13 @@ puts "Welcome to Tic-Tac-Toe!"
 
 while game.game_finished? == false
   game.show_tiles
-  puts "Player one, where would you like to place your symbol [1-9]?"
+  puts "Player one (x), where would you like to place your symbol [1-9]?"
   tile = gets.to_i
   game.place_symbol('x', tile)
+
   game.show_tiles
   # check game status, exit loop if finished
-  puts "Player two, where would you like to place your symbol [1-9]?"
+  puts "Player two (o), where would you like to place your symbol [1-9]?"
   tile = gets.to_i
   game.place_symbol('o', tile)
   # check game status again
