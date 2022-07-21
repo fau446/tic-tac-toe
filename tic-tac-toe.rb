@@ -36,10 +36,46 @@ class Game
     end
   end
 
-  def check_game_status()
-
+  def check_game_status(symbol)
+    if horizontal_win?(symbol) || vertical_win?(symbol) || diagonal_win?(symbol)
+      puts 'WIN!'
+      @game_finished = true
+    elsif @tiles.values.all? { |value| value.is_a? String }
+      puts "TIE!"
+      @game_finished = true
+    end
   end
 
+  private
+  def horizontal_win?(symbol)
+    first_row = [@tiles[1], @tiles[2], @tiles[3]]
+    second_row = [@tiles[4], @tiles[5], @tiles[6]]
+    third_row = [@tiles[7], @tiles[8], @tiles[9]]
+
+    if (first_row.all? { |tile| tile == symbol }) || (second_row.all? { |tile| tile == symbol }) || (third_row.all? { |tile| tile == symbol })
+      return true
+    end
+    false
+  end
+
+  def vertical_win?(symbol)
+    first_column = [@tiles[1], @tiles[4], @tiles[7]]
+    second_column = [@tiles[2], @tiles[5], @tiles[8]]
+    third_column = [@tiles[3], @tiles[6], @tiles[9]]
+    if (first_column.all? { |tile| tile == symbol }) || (second_column.all? { |tile| tile == symbol }) || (third_column.all? { |tile| tile == symbol })
+      return true
+    end
+    false
+  end
+
+  def diagonal_win?(symbol)
+    first_diagonal = [@tiles[1], @tiles[5], @tiles[9]]
+    second_diagonal = [@tiles[3], @tiles[5], @tiles[7]]
+    if (first_diagonal.all? { |tile| tile == symbol }) || (second_diagonal.all? { |tile| tile == symbol })
+      return true
+    end
+    false
+  end
 end
 
 game = Game.new()
@@ -51,11 +87,14 @@ while game.game_finished? == false
   puts "Player one (x), where would you like to place your symbol [1-9]?"
   tile = gets.to_i
   game.place_symbol('x', tile)
-
   game.show_tiles
-  # check game status, exit loop if finished
+  game.check_game_status('x')
+  break if game.game_finished? == true
+
   puts "Player two (o), where would you like to place your symbol [1-9]?"
   tile = gets.to_i
   game.place_symbol('o', tile)
-  # check game status again
+  game.check_game_status('o')
 end
+
+game.show_tiles
